@@ -35,7 +35,8 @@ def json_search(query):
 
 @app.route("/")
 def home():
-    return render_template('base.html',title="sample html")
+    # return render_template('base.html',title="sample html")
+    return render_template('demo.html',title="demo html")
 
 @app.route("/episodes")
 def episodes_search():

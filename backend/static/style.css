@@ -36,6 +36,22 @@
     color:#DB4437;
 }
 
+.google-yellow{
+    color:	#F4B400;
+}
+
+.google-blue{
+    color:	#4285F4;
+}
+
+.google-green{
+    color:	#0F9D58;
+}
+
+.google-red{
+    color:#DB4437;
+}
+
 .google-colors{
     display: flex;
     align-items: center;
@@ -75,6 +91,10 @@
     font-size: 16px;
     border: none;
     outline: 0;
+}
+
+.search-button button{
+    
 }
 
 #answer-box{

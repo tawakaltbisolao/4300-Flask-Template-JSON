@@ -1,0 +1,123 @@
+<!doctype html>
+<title>{% block title %}HairCare{% endblock %} - Flaskr</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit&family=Montserrat&family=Open+Sans:wght@500&display=swap" rel="stylesheet">
+<body>
+    <div class="full-body-container">
+        <div class="top-text"> <!--vertically stacked-->
+            <div class="google-colors">
+                <!-- <h1 id="google-4">4</h1>
+                <h1 id="google-3">3</h1>
+                <h1 id="google-0-1">0</h1>
+                <h1 id="google-0-2">0</h1> -->
+                <h1 class="google-red">H</h1>
+                <h1 class="google-green">A</h1>
+                <h1 class="google-red">I</h1>
+                <h1 class="google-red">R</h1>
+                <h1 class="google-yellow">C</h1>
+                <h1 class="google-yellow">A</h1>
+                <h1 class="google-blue">R</h1>
+                <h1 class="google-yellow">E</h1>
+            </div>
+            <div>
+                <label>I have </label>
+                <select name="hair-color">
+                    <!-- <option value="" selected disabled hidden>Color</option> -->
+                    <option value="black">Black</option>
+                    <option value="brown-dark">Dark Brown</option>
+                    <option value="brunette">Brunette</option>
+                    <option value="brown-med">Medium Brown</option>
+                    <option value="brown-light">Light Brown</option>
+                    <option value="blonde-dark">Dark Blonde</option>
+                    <option value="blonde">Blonde</option>
+                    <option value="blonde-light">Light Blonde</option>
+                    <option value="blonde-plat">Platinum</option>
+                    <option value="blonde-straw">Strawberry Blonde</option>
+                    <option value="auburn">Auburn</option>
+                    <option value="red">Red</option>
+                    <option value="grey">Grey</option>
+                    <option value="white">White</option>
+                </select>
+                <label>, </label>
+                <select name="hair-types" multiple>
+                    <!-- <option value="" selected disabled hidden>Type(s)</option> -->
+                    <option value="dry">Dry</option>
+                    <option value="normal">Normal</option>
+                    <option value="oily">Oily</option>
+                    <option value="straight">Straight</option>
+                    <option value="wavy">Wavy</option>
+                    <option value="curly">Curly</option>
+                    <option value="fine">Fine</option>
+                    <option value="coarse">Coarse</option>
+                    <option value="thin">Thin</option>
+                    <option value="thick">Thick</option>
+                    <option value="chemed">Chemically Treated</option>
+                    <option value="colored">Color Treated</option>
+                    <option value="kinky">Kinky</option>
+                </select>
+                <label> hair which suffers from </label>
+                <select name="hair-issues" multiple>
+                    <!-- <option value="" selected disabled hidden>Type(s)</option> -->
+                    <option value="Anti">Anti-Aging</option>
+                    <option value="Brittleness">Brittleness</option>
+                    <option value="ColorProt">Color Protection</option>
+                    <option value="Curls">Curls</option>
+                    <option value="Damage">Damage</option>
+                    <option value="Dandruff">Dandruff</option>
+                    <option value="DryS">Dry Scalp</option>
+                    <option value="DryH">Dryness</option>
+                    <option value="Frizz">Frizz</option>
+                    <option value="IsThis">Hair Loss</option>
+                    <option value="HeatProt">Heat Protection</option>
+                    <option value="OilyS">Oily Scalp</option>
+                    <option value="Split">Split Ends</option>
+                    <option value="Straightening">Straightening</option>
+                    <option value="Volume">Volume</option>
+                </select>
+                <label>.</label>
+            </div>
+            <div class="input-box" onclick="sendFocus()">
+                <img src="{{ url_for('static', filename='images/mag.png') }}" />
+                <input placeholder="I want a product that will..." id="filter-text-val">
+            </div>
+            <div class="search-button">
+                <button type="button" onclick="filterText() ">HairCare Search!</button>
+            </div>
+        </div>
+        <div id="answer-box">
+
+        </div>
+    </div>
+
+    <script>
+
+        function answerBoxTemplate(title,titleDesc,rating){
+            return `<div class=''>
+                <h3 class='episode-title'>${title}</h3>
+                <p class='episode-desc'>${titleDesc}</p>
+                <p class='episode-rating'>IMDB Rating: ${rating}</p>
+            </div>`
+        }
+
+        function sendFocus(){
+            document.getElementById('filter-text-val').focus()
+        }
+
+        function filterText(){
+            document.getElementById("answer-box").innerHTML = ""
+            console.log(document.getElementById("filter-text-val").value)
+            fetch("/episodes?" + new URLSearchParams({ title: document.getElementById("filter-text-val").value }).toString())
+            .then((response) => response.json())
+            .then((data) => data.forEach(row => {
+                
+                let tempDiv = document.createElement("div")
+                tempDiv.innerHTML = answerBoxTemplate(row.title,row.descr,row.imdb_rating)
+                document.getElementById("answer-box").appendChild(tempDiv)
+            }));
+
+        }
+            
+    </script>
+</body>
