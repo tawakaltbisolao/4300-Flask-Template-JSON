@@ -23,7 +23,7 @@
             </div>
             <div>
                 <label>I have </label>
-                <select name="hair-color">
+                <select name="hair-color" id="hair-color">
                     <!-- <option value="" selected disabled hidden>Color</option> -->
                     <option value="black">Black</option>
                     <option value="brown-dark">Dark Brown</option>
@@ -41,7 +41,7 @@
                     <option value="white">White</option>
                 </select>
                 <label>, </label>
-                <select name="hair-types" multiple>
+                <select name="hair-types" id="hair-types" multiple>
                     <!-- <option value="" selected disabled hidden>Type(s)</option> -->
                     <option value="dry">Dry</option>
                     <option value="normal">Normal</option>
@@ -58,7 +58,7 @@
                     <option value="kinky">Kinky</option>
                 </select>
                 <label> hair which suffers from </label>
-                <select name="hair-issues" multiple>
+                <select name="hair-issues" id="hair-issues" multiple>
                     <!-- <option value="" selected disabled hidden>Type(s)</option> -->
                     <option value="Anti">Anti-Aging</option>
                     <option value="Brittleness">Brittleness</option>
@@ -77,6 +77,24 @@
                     <option value="Volume">Volume</option>
                 </select>
                 <label>.</label>
+            </div>
+            <div>
+                <label>I want to be recommended </label>
+                <select id="want-poo">
+                    <option value="yes">Shampoos</option>
+                    <option value="no">No Shampoos</option>
+                </select>
+                <label>, </label>
+                <select id="want-cond">
+                    <option value="yes">Conditioners</option>
+                    <option value="no">No Conditioners</option>
+                </select>
+                <label>, and </label>
+                <select id="want-oil">
+                    <option value="yes">Oils</option>
+                    <option value="no">No Oils</option>
+                </select>
+                
             </div>
             <div class="input-box" onclick="sendFocus()">
                 <img src="{{ url_for('static', filename='images/mag.png') }}" />
@@ -101,19 +119,35 @@
             </div>`
         }
 
+        function hairProductTemplate(product_name, query) {
+            // params: product name, relevant review(s?), average rating?
+        }
+
+
+
+
         function sendFocus(){
             document.getElementById('filter-text-val').focus()
         }
 
         function filterText(){
             document.getElementById("answer-box").innerHTML = ""
-            console.log(document.getElementById("filter-text-val").value)
-            fetch("/episodes?" + new URLSearchParams({ title: document.getElementById("filter-text-val").value }).toString())
+            // console.log(document.getElementById("filter-text-val").value)
+            // fetch("/episodes?" + new URLSearchParams({ title: document.getElementById("filter-text-val").value }).toString())
+            // .then((response) => response.json())
+            // .then((data) => data.forEach(row => {
+            var hair_color = document.getElementById("hair-color").value
+            var query = document.getElementById("filter-text-val").value
+            console.log(query)
+            // console.log(document.getElementById("filter-text-val").value)
+            // fetch("/reviews?" + new URLSearchParams({ query: query }).toString())
+            fetch("/episodes?" + new URLSearchParams({ query: query }).toString())
             .then((response) => response.json())
             .then((data) => data.forEach(row => {
                 
                 let tempDiv = document.createElement("div")
                 tempDiv.innerHTML = answerBoxTemplate(row.title,row.descr,row.imdb_rating)
+                // tempDiv.innerHTML = answerBoxTemplate(row.title,row.descr,row.imdb_rating)
                 document.getElementById("answer-box").appendChild(tempDiv)
             }));
 
