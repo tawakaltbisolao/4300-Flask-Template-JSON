@@ -63,6 +63,12 @@ CORS(app)
 
 def reviews_json_search(wantPoo, wantCond, wantOil, query):
     #Thanks Bisola!
+    # print("wantPoo: " + wantPoo)
+    # print("wantCond: " + wantCond)
+    # print("wantOil: " + wantOil)
+    # print(type(wantPoo)) #THEY'RE STRINGS
+    # print(type(wantCond))
+    # print(type(wantOil))
     query_vec = vec.transform([query]) #TOARRAY
     poo_matches = '[]'
     cond_matches = '[]'
@@ -72,13 +78,20 @@ def reviews_json_search(wantPoo, wantCond, wantOil, query):
         poo_docs = cosine_similarity(poo_docs, query_vec).flatten() #shoud have len(poo_docs)
         # poo_docs = np.argmax(poo_docs) #now just a single index
         poo_docs = np.argsort(poo_docs)[:-6:-1] #top 5 in descending order: -1 to -5 inclusive
-        #TODO AFTER DEMO: change this to top 5 or top 10 reviews per product, not just 1
-        # also means change HTML to expect LIST instead of single
         poo_matches = data.iloc[poo_docs].to_json(orient='records')
-        # print(type(poo_matches))
-        # poo_matches.append(data.iloc[poo_docs].to_json(orient='records'))
-        print(poo_matches)
     #TODO: conditioner and oil
+    if wantCond:
+        cond_docs = tdidf_matrix[cond_min_index:oil_min_index]
+        cond_docs = cosine_similarity(cond_docs, query_vec).flatten()
+        cond_docs = np.argsort(cond_docs)[:-6:-1] #top 5 in descending order: -1 to -5 inclusive
+        cond_docs += cond_min_index
+        cond_matches = data.iloc[cond_docs].to_json(orient='records')
+    if wantOil:
+        oil_docs = tdidf_matrix[oil_min_index:]
+        oil_docs = cosine_similarity(oil_docs, query_vec).flatten() 
+        oil_docs = np.argsort(oil_docs)[:-6:-1] #top 5 in descending order: -1 to -5 inclusive
+        oil_docs += oil_min_index
+        oil_matches = data.iloc[oil_docs].to_json(orient='records')
     
 
     #return should be dict or list of dicts;
@@ -94,9 +107,9 @@ def home():
 @app.route("/reviews")
 def reviews_search():
     query = request.args.get("query")
-    wantPoo = request.args.get("wantPoo")
-    wantCond = request.args.get("wantCond")
-    wantOil = request.args.get("wantOil")
+    wantPoo = request.args.get("wantPoo") == 'true'
+    wantCond = request.args.get("wantCond") == 'true'
+    wantOil = request.args.get("wantOil") == 'true'
     return reviews_json_search(wantPoo, wantCond, wantOil, query)
     # return reviews_json_search(text)
 

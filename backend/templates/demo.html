@@ -180,8 +180,7 @@
             // console.log(query)
 
             // console.log(document.getElementById("filter-text-val").value)
-            fetch("/reviews?" + new URLSearchParams({ query: query, 
-                wantPoo: yes_poo, wantCond: yes_cond, wantOil: yes_oil }).toString())
+            fetch("/reviews?" + new URLSearchParams({ query: query, wantPoo: yes_poo, wantCond: yes_cond, wantOil: yes_oil }).toString())
             .then((response) => response.json())
             .then((data) => {
                 // console.log(data.shampoos)
@@ -191,6 +190,7 @@
                 let shampoos = JSON.parse(data.shampoos)
                 let conditioners = JSON.parse(data.conditioners)
                 let oils = JSON.parse(data.oils)
+                console.log(shampoos.length, conditioners.length, oils.length)
                 if(shampoos.length > 0) {
                     let tempTitle = document.createElement("div")
                     tempTitle.innerHTML = `<h2 class='product-type'>Shampoos</h2>`
@@ -208,11 +208,29 @@
                         document.getElementById("answer-box").appendChild(tempDiv)
                         
                     });
-
                 }
-                // if(conditioners.length > 0) {
-                //     console.log("conditioners")
-                // }
+                if(conditioners.length > 0) {
+                    let tempTitle = document.createElement("div")
+                    tempTitle.innerHTML = `<h2 class='product-type'>Conditioners</h2>`
+                    document.getElementById("answer-box").appendChild(tempTitle)
+                    conditioners.forEach(review => {
+                        let tempDiv = document.createElement("div")
+                        tempDiv.innerHTML = hairReviewTemplate(review.product_name, review.content, review.profile)
+                        document.getElementById("answer-box").appendChild(tempDiv)
+                        
+                    });
+                }
+                if(oils.length > 0) {
+                    let tempTitle = document.createElement("div")
+                    tempTitle.innerHTML = `<h2 class='product-type'>Oils</h2>`
+                    document.getElementById("answer-box").appendChild(tempTitle)
+                    oils.forEach(review => {
+                        let tempDiv = document.createElement("div")
+                        tempDiv.innerHTML = hairReviewTemplate(review.product_name, review.content, review.profile)
+                        document.getElementById("answer-box").appendChild(tempDiv)
+                        
+                    });
+                }
                 
             });
             // .then((data) => data.forEach(row => {
