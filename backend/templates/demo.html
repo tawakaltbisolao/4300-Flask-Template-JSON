@@ -23,8 +23,14 @@
             </div>
             <div>
                 <label>I have </label>
+                <input placeholder="Color (e.g. Dark Brown)" id="hair-color">
+                <label>, </label>
+                <input placeholder="Type (e.g. Oily,Fine,Thin)" id="hair-type">
+                <label>hair</label>
+                <!-- <label> hair which suffers from </label> -->
+                <label>.</label>
+                <!-- <label>I have </label>
                 <select name="hair-color" id="hair-color">
-                    <!-- <option value="" selected disabled hidden>Color</option> -->
                     <option value="black">Black</option>
                     <option value="brown-dark">Dark Brown</option>
                     <option value="brunette">Brunette</option>
@@ -42,7 +48,6 @@
                 </select>
                 <label>, </label>
                 <select name="hair-types" id="hair-types" multiple>
-                    <!-- <option value="" selected disabled hidden>Type(s)</option> -->
                     <option value="dry">Dry</option>
                     <option value="normal">Normal</option>
                     <option value="oily">Oily</option>
@@ -59,7 +64,6 @@
                 </select>
                 <label> hair which suffers from </label>
                 <select name="hair-issues" id="hair-issues" multiple>
-                    <!-- <option value="" selected disabled hidden>Type(s)</option> -->
                     <option value="Anti">Anti-Aging</option>
                     <option value="Brittleness">Brittleness</option>
                     <option value="ColorProt">Color Protection</option>
@@ -76,7 +80,7 @@
                     <option value="Straightening">Straightening</option>
                     <option value="Volume">Volume</option>
                 </select>
-                <label>.</label>
+                <label>.</label> -->
             </div>
             <div>
                 <label>I want to be recommended </label>
@@ -94,14 +98,14 @@
                     <option value="yes">Oils</option>
                     <option value="no">No Oils</option>
                 </select>
-                
+                <label>.</label>
             </div>
             <div class="input-box" onclick="sendFocus()">
                 <img src="{{ url_for('static', filename='images/mag.png') }}" />
                 <input placeholder="I want a product that will..." id="filter-text-val">
             </div>
             <div class="search-button">
-                <button type="button" onclick="filterText() ">HairCare Search!</button>
+                <button type="button" onclick="filterText()">HairCare Search!</button>
             </div>
         </div>
         <div id="answer-box">
@@ -119,8 +123,18 @@
             </div>`
         }
 
-        function hairProductTemplate(product_name, query) {
+        function hairProductTemplate(product_name, reviews_list) {
             // params: product name, relevant review(s?), average rating?
+            div_template = `<div class=''>
+                <h3 class='product-name'>${product_name}</h3>`
+            for (let review_body of reviews_list) {
+                div_template += `
+                    <p class='review'>${review_body}</p>`
+            }
+            div_template += `
+                <p class='episode-rating'>IMDB Rating: ${rating}</p>
+            </div>`
+            return div_template
         }
 
 
@@ -136,18 +150,31 @@
             // fetch("/episodes?" + new URLSearchParams({ title: document.getElementById("filter-text-val").value }).toString())
             // .then((response) => response.json())
             // .then((data) => data.forEach(row => {
-            var hair_color = document.getElementById("hair-color").value
-            var query = document.getElementById("filter-text-val").value
-            console.log(query)
+            let hair_color = document.getElementById("hair-color").value
+            let hair_type = document.getElementById("hair-type").value
+            let yes_poo = (document.getElementById("want-poo").value == 'yes')
+            let yes_cond = (document.getElementById("want-cond").value == 'yes')
+            let yes_oil = (document.getElementById("want-oil").value == 'yes')
+            let query = document.getElementById("filter-text-val").value
+            query = hair_color + ' ' + hair_type + ' ' + query
+
+            // console.log(hair_color)
+            // console.log(hair_type)
+            // console.log(yes_poo)
+
+            // console.log(query)
+
             // console.log(document.getElementById("filter-text-val").value)
-            // fetch("/reviews?" + new URLSearchParams({ query: query }).toString())
-            fetch("/episodes?" + new URLSearchParams({ query: query }).toString())
+            fetch("/reviews?" + new URLSearchParams({ query: query, 
+                wantPoo: yes_poo, wantCond: yes_cond, wantOil: yes_oil }).toString())
             .then((response) => response.json())
             .then((data) => data.forEach(row => {
                 
                 let tempDiv = document.createElement("div")
-                tempDiv.innerHTML = answerBoxTemplate(row.title,row.descr,row.imdb_rating)
                 // tempDiv.innerHTML = answerBoxTemplate(row.title,row.descr,row.imdb_rating)
+                // tempDiv.innerHTML = hairProductTemplate(row.product_name, [row.content])
+                tempDiv.innerHTML = `<p>${row}</p>`
+                //TODO: actually fix tempDiv
                 document.getElementById("answer-box").appendChild(tempDiv)
             }));
 
