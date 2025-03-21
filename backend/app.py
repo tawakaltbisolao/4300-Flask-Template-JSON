@@ -5,7 +5,7 @@ from flask_cors import CORS
 from helpers.MySQLDatabaseHandler import MySQLDatabaseHandler
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
-# from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 
     # shampoo_df = data.iloc[:35501]
@@ -35,11 +35,13 @@ with open(json_file_path, 'r') as file:
 data = pd.DataFrame(data) #pandas DataFrame
 data['content'] = data['content'].map(lambda x: x.strip())
 data['modcontent'] = data['profile'] + ' ' + data['content'] #PREpend profile info (even if blank)
+# data['content'] = data['profile'] + '$$' + data['content'] #PREpend profile info (even if blank)
 # data['content'] = data['content'].map(lambda x: x.strip()) #could strip again but IDC
 # data = data.drop('profile', axis=1) #no longer needed in the demo
 
 vec = TfidfVectorizer(max_df=0.8, min_df=10)
-tdidf_matrix = vec.fit_transform(data['modcontent']).toarray()
+# tdidf_matrix = vec.fit_transform(data['content']) 
+tdidf_matrix = vec.fit_transform(data['modcontent'])
 data = data.drop('modcontent', axis=1) #no longer needed in the demo
 
 
@@ -61,13 +63,13 @@ CORS(app)
 
 def reviews_json_search(wantPoo, wantCond, wantOil, query):
     #Thanks Bisola!
-    query_vec = vec.transform([query]).toarray().T
+    query_vec = vec.transform([query]) #TOARRAY
     poo_matches = '[]'
     cond_matches = '[]'
     oil_matches = '[]' #if actual arrays, JS gets mad when parsing
     if wantPoo:
         poo_docs = tdidf_matrix[:cond_min_index]
-        poo_docs = np.dot(poo_docs, query_vec).flatten() #shoud have len(poo_docs)
+        poo_docs = cosine_similarity(poo_docs, query_vec).flatten() #shoud have len(poo_docs)
         # poo_docs = np.argmax(poo_docs) #now just a single index
         poo_docs = np.argsort(poo_docs)[:-6:-1] #top 5 in descending order: -1 to -5 inclusive
         #TODO AFTER DEMO: change this to top 5 or top 10 reviews per product, not just 1
