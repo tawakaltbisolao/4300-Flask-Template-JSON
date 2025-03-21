@@ -115,27 +115,35 @@
 
     <script>
 
-        function answerBoxTemplate(title,titleDesc,rating){
+        // function answerBoxTemplate(title,titleDesc,rating){
+        //     return `<div class=''>
+        //         <h3 class='episode-title'>${title}</h3>
+        //         <p class='episode-desc'>${titleDesc}</p>
+        //         <p class='episode-rating'>IMDB Rating: ${rating}</p>
+        //     </div>`
+        // }
+
+        function hairReviewTemplate(product_name, review_body, reviewer_bio) {
             return `<div class=''>
-                <h3 class='episode-title'>${title}</h3>
-                <p class='episode-desc'>${titleDesc}</p>
-                <p class='episode-rating'>IMDB Rating: ${rating}</p>
+                <h3 class='product-name'>${product_name}</h3>
+                <h6 class='reviewer-bio'>Reviewer profile: ${reviewer_bio}</h6>
+                <p class='product-review'>${review_body}</p>
             </div>`
         }
 
-        function hairProductTemplate(product_name, reviews_list) {
-            // params: product name, relevant review(s?), average rating?
-            div_template = `<div class=''>
-                <h3 class='product-name'>${product_name}</h3>`
-            for (let review_body of reviews_list) {
-                div_template += `
-                    <p class='review'>${review_body}</p>`
-            }
-            div_template += `
-                <p class='episode-rating'>IMDB Rating: ${rating}</p>
-            </div>`
-            return div_template
-        }
+        // function hairProductTemplate(product_name, reviews_list) {
+        //     // params: product name, relevant review(s?), average rating?
+        //     div_template = `<div class=''>
+        //         <h3 class='product-name'>${product_name}</h3>`
+        //     for (let review_body of reviews_list) {
+        //         div_template += `
+        //             <p class='review'>${review_body}</p>`
+        //     }
+        //     div_template += `
+        //         <p class='episode-rating'>IMDB Rating: ${rating}</p>
+        //     </div>`
+        //     return div_template
+        // }
 
 
 
@@ -168,15 +176,47 @@
             fetch("/reviews?" + new URLSearchParams({ query: query, 
                 wantPoo: yes_poo, wantCond: yes_cond, wantOil: yes_oil }).toString())
             .then((response) => response.json())
-            .then((data) => data.forEach(row => {
+            .then((data) => {
+                // console.log(data.shampoos)
+                // console.log(typeof(data.shampoos))
+                // console.log(data.conditioners)
+                // console.log(data.oils)
+                let shampoos = JSON.parse(data.shampoos)
+                let conditioners = JSON.parse(data.conditioners)
+                let oils = JSON.parse(data.oils)
+                if(shampoos.length > 0) {
+                    let tempTitle = document.createElement("div")
+                    tempTitle.innerHTML = `<h2 class='product-type'>Shampoos</h2>`
+                    document.getElementById("answer-box").appendChild(tempTitle)
+                    // console.log("shampoos")
+                    // let tempTitle = document.createElement("label")
+                    // tempTitle.innerHTML = 
+                    // tempDiv.innerHTML = answerBoxTemplate(row.title,row.descr,row.imdb_rating)
+                    // tempDiv.innerHTML = hairProductTemplate(row.product_name, [row.content])
+                    // tempDiv.innerHTML = `<p>${row}</p>`
+                    //TODO: actually fix tempDiv
+                    shampoos.forEach(review => {
+                        let tempDiv = document.createElement("div")
+                        tempDiv.innerHTML = hairReviewTemplate(review.product_name, review.content, review.profile)
+                        document.getElementById("answer-box").appendChild(tempDiv)
+                        
+                    });
+
+                }
+                // if(conditioners.length > 0) {
+                //     console.log("conditioners")
+                // }
                 
-                let tempDiv = document.createElement("div")
-                // tempDiv.innerHTML = answerBoxTemplate(row.title,row.descr,row.imdb_rating)
-                // tempDiv.innerHTML = hairProductTemplate(row.product_name, [row.content])
-                tempDiv.innerHTML = `<p>${row}</p>`
-                //TODO: actually fix tempDiv
-                document.getElementById("answer-box").appendChild(tempDiv)
-            }));
+            });
+            // .then((data) => data.forEach(row => {
+                
+            //     let tempDiv = document.createElement("div")
+            //     // tempDiv.innerHTML = answerBoxTemplate(row.title,row.descr,row.imdb_rating)
+            //     // tempDiv.innerHTML = hairProductTemplate(row.product_name, [row.content])
+            //     tempDiv.innerHTML = `<p>${row}</p>`
+            //     //TODO: actually fix tempDiv
+            //     document.getElementById("answer-box").appendChild(tempDiv)
+            // }));
 
         }
             

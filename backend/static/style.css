@@ -93,19 +93,34 @@
     outline: 0;
 }
 
-.search-button button{
+/* .search-button button{
     
-}
+} */
 
 #answer-box{
     width: 700px;
     margin-top:50px; 
 }
 
-.episode-title{
+.product-name{
+    font-family: 'Kanit', sans-serif;
+}
+
+.product-type{
+    font-family: 'Kanit', sans-serif;
+}
+
+.product-review{
+    font-family: 'Montserrat', sans-serif;
+}
+.reviewer-bio{
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* .episode-title{
     font-family: 'Kanit', sans-serif;
 }
 
 .episode-desc{
     font-family: 'Montserrat', sans-serif;
-}
+} */
