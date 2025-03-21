@@ -123,12 +123,34 @@
         //     </div>`
         // }
 
-        function hairReviewTemplate(product_name, review_body, reviewer_bio) {
+        function hairReviewTemplate(review) {
+            product_name = review.product_name
+            review_body = review.content
+            reviewer_bio = review.profile
+            indiv_rating = review.star
+            // console.log(typeof(indiv_rating))
+            if(indiv_rating >= 4) {
             return `<div class=''>
                 <h3 class='product-name'>${product_name}</h3>
                 <h6 class='reviewer-bio'>Reviewer profile: ${reviewer_bio}</h6>
+                <h5 class='star-rating'>Rating: ${indiv_rating}&#x1F31F;</h5>
                 <p class='product-review'>${review_body}</p>
             </div>`
+            } else if(indiv_rating == 3) {
+            return `<div class=''>
+                <h3 class='product-name'>${product_name}</h3>
+                <h6 class='reviewer-bio'>Reviewer profile: ${reviewer_bio}</h6>
+                <h5 class='star-rating'>Rating: ${indiv_rating}&#x1F970;</h5>
+                <p class='product-review'>${review_body}</p>
+            </div>`
+            } else {
+                return `<div class=''>
+                    <h3 class='product-name'>${product_name}</h3>
+                    <h6 class='reviewer-bio'>Reviewer profile: ${reviewer_bio}</h6>
+                    <h5 class='star-rating'>Rating: ${indiv_rating}&#x1F4A9;</h5>
+                    <p class='product-review'>${review_body}</p>
+                </div>`
+            }
         }
 
         // function hairReviewTemplate(product_name, review_body) {
@@ -204,7 +226,7 @@
                     //TODO: actually fix tempDiv
                     shampoos.forEach(review => {
                         let tempDiv = document.createElement("div")
-                        tempDiv.innerHTML = hairReviewTemplate(review.product_name, review.content, review.profile)
+                        tempDiv.innerHTML = hairReviewTemplate(review)
                         document.getElementById("answer-box").appendChild(tempDiv)
                         
                     });
@@ -215,7 +237,7 @@
                     document.getElementById("answer-box").appendChild(tempTitle)
                     conditioners.forEach(review => {
                         let tempDiv = document.createElement("div")
-                        tempDiv.innerHTML = hairReviewTemplate(review.product_name, review.content, review.profile)
+                        tempDiv.innerHTML = hairReviewTemplate(review)
                         document.getElementById("answer-box").appendChild(tempDiv)
                         
                     });
@@ -226,7 +248,7 @@
                     document.getElementById("answer-box").appendChild(tempTitle)
                     oils.forEach(review => {
                         let tempDiv = document.createElement("div")
-                        tempDiv.innerHTML = hairReviewTemplate(review.product_name, review.content, review.profile)
+                        tempDiv.innerHTML = hairReviewTemplate(review)
                         document.getElementById("answer-box").appendChild(tempDiv)
                         
                     });
