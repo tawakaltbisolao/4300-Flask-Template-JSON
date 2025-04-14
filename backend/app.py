@@ -108,7 +108,7 @@ def reviews_json_search(wantPoo, wantCond, wantOil, query):
         cond_docs = np.dot(cond_docs, query_vec)
         cond_docs = np.argsort(-cond_docs)[:6] #sort descending, then get first 5
         # cond_matches = data.iloc[cond_docs].to_json(orient='records')
-        cond_docs = [data[i] for i in cond_docs]
+        cond_docs = [data[i + cond_min_index] for i in cond_docs]
         cond_matches = json.dumps(cond_docs)
 
 
@@ -122,7 +122,7 @@ def reviews_json_search(wantPoo, wantCond, wantOil, query):
         oil_docs = np.dot(oil_docs, query_vec)
         oil_docs = np.argsort(-oil_docs)[:6] #sort descending, then get first 5
         # oil_matches = data.iloc[oil_docs].to_json(orient='records')
-        oil_docs = [data[i] for i in oil_docs]
+        oil_docs = [data[i + oil_min_index] for i in oil_docs]
         oil_matches = json.dumps(oil_docs)
 
 
