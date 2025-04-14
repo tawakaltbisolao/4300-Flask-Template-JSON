@@ -2,10 +2,11 @@ import json
 import os
 from flask import Flask, render_template, request
 from flask_cors import CORS
-from helpers.MySQLDatabaseHandler import MySQLDatabaseHandler
-import pandas as pd
+# from helpers.MySQLDatabaseHandler import MySQLDatabaseHandler
+# import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.preprocessing import normalize
 import numpy as np
 
     # shampoo_df = data.iloc[:35501]
@@ -28,21 +29,32 @@ json_file_path = os.path.join(current_directory, 'init.json')
 # Assuming your JSON data is stored in a file named 'init.json'
 with open(json_file_path, 'r') as file:
     data = json.load(file) #list of dictionaries
-    # episodes_df = pd.DataFrame(data['episodes'])
-    # reviews_df = pd.DataFrame(data['reviews'])
+#     # episodes_df = pd.DataFrame(data['episodes'])
+#     # reviews_df = pd.DataFrame(data['reviews'])
+
+data = [review['profile'] + ' ' + review['content'] for review in data]
+vec = TfidfVectorizer(max_df=0.8, min_df=10, ngram_range=(1,3))
+vec.fit(data)
+data = None
+with open(json_file_path, 'r') as file:
+    data = json.load(file) #list of dictionaries
+with open('svd.npy', 'rb') as f:
+    docs_compressed_normalized = np.load(f)
+    words_compressed_normalized = np.load(f)
+
 
 #each datapoint has "product_name", "star", "content", and "profile" (might be blank)
-data = pd.DataFrame(data) #pandas DataFrame
-data['content'] = data['content'].map(lambda x: x.strip())
-data['modcontent'] = data['profile'] + ' ' + data['content'] #PREpend profile info (even if blank)
+# data = pd.DataFrame(data) #pandas DataFrame
+# data['content'] = data['content'].map(lambda x: x.strip())
+# data['modcontent'] = data['profile'] + ' ' + data['content'] #PREpend profile info (even if blank)
 # data['content'] = data['profile'] + '$$' + data['content'] #PREpend profile info (even if blank)
 # data['content'] = data['content'].map(lambda x: x.strip()) #could strip again but IDC
 # data = data.drop('profile', axis=1) #no longer needed in the demo
 
-vec = TfidfVectorizer(max_df=0.8, min_df=10)
-# tdidf_matrix = vec.fit_transform(data['content']) 
-tdidf_matrix = vec.fit_transform(data['modcontent'])
-data = data.drop('modcontent', axis=1) #no longer needed in the demo
+# vec = TfidfVectorizer(max_df=0.8, min_df=10)
+# # tdidf_matrix = vec.fit_transform(data['content']) 
+# tdidf_matrix = vec.fit_transform(data['modcontent'])
+# data = data.drop('modcontent', axis=1) #no longer needed in the demo
 
 
     # shampoo_df = data.iloc[:35501]
@@ -69,29 +81,56 @@ def reviews_json_search(wantPoo, wantCond, wantOil, query):
     # print(type(wantPoo)) #THEY'RE STRINGS
     # print(type(wantCond))
     # print(type(wantOil))
-    query_vec = vec.transform([query]) #TOARRAY
+    # query_vec = vec.transform([query]) #TOARRAY
+    query_vec = vec.transform([query]).toarray() 
+    query_vec = normalize(np.dot(query_vec, words_compressed_normalized)).squeeze()
     poo_matches = '[]'
     cond_matches = '[]'
     oil_matches = '[]' #if actual arrays, JS gets mad when parsing
     if wantPoo:
-        poo_docs = tdidf_matrix[:cond_min_index]
-        poo_docs = cosine_similarity(poo_docs, query_vec).flatten() #shoud have len(poo_docs)
-        # poo_docs = np.argmax(poo_docs) #now just a single index
-        poo_docs = np.argsort(poo_docs)[:-6:-1] #top 5 in descending order: -1 to -5 inclusive
-        poo_matches = data.iloc[poo_docs].to_json(orient='records')
+        poo_docs = docs_compressed_normalized[:cond_min_index]
+        poo_docs = np.dot(poo_docs, query_vec)
+        poo_docs = np.argsort(-poo_docs)[:6] #sort descending, then get first 5
+        # poo_matches = data.iloc[poo_docs].to_json(orient='records')
+        poo_docs = [data[i] for i in poo_docs]
+        poo_matches = json.dumps(poo_docs)
+
+
+
+        # poo_docs = tdidf_matrix[:cond_min_index]
+        # poo_docs = cosine_similarity(poo_docs, query_vec).flatten() #shoud have len(poo_docs)
+        # # poo_docs = np.argmax(poo_docs) #now just a single index
+        # poo_docs = np.argsort(poo_docs)[:-6:-1] #top 5 in descending order: -1 to -5 inclusive
+        # poo_matches = data.iloc[poo_docs].to_json(orient='records')
     #TODO: conditioner and oil
     if wantCond:
-        cond_docs = tdidf_matrix[cond_min_index:oil_min_index]
-        cond_docs = cosine_similarity(cond_docs, query_vec).flatten()
-        cond_docs = np.argsort(cond_docs)[:-6:-1] #top 5 in descending order: -1 to -5 inclusive
-        cond_docs += cond_min_index
-        cond_matches = data.iloc[cond_docs].to_json(orient='records')
+        cond_docs = docs_compressed_normalized[cond_min_index:oil_min_index]
+        cond_docs = np.dot(cond_docs, query_vec)
+        cond_docs = np.argsort(-cond_docs)[:6] #sort descending, then get first 5
+        # cond_matches = data.iloc[cond_docs].to_json(orient='records')
+        cond_docs = [data[i] for i in cond_docs]
+        cond_matches = json.dumps(cond_docs)
+
+
+        # cond_docs = tdidf_matrix[cond_min_index:oil_min_index]
+        # cond_docs = cosine_similarity(cond_docs, query_vec).flatten()
+        # cond_docs = np.argsort(cond_docs)[:-6:-1] #top 5 in descending order: -1 to -5 inclusive
+        # cond_docs += cond_min_index
+        # cond_matches = data.iloc[cond_docs].to_json(orient='records')
     if wantOil:
-        oil_docs = tdidf_matrix[oil_min_index:]
-        oil_docs = cosine_similarity(oil_docs, query_vec).flatten() 
-        oil_docs = np.argsort(oil_docs)[:-6:-1] #top 5 in descending order: -1 to -5 inclusive
-        oil_docs += oil_min_index
-        oil_matches = data.iloc[oil_docs].to_json(orient='records')
+        oil_docs = docs_compressed_normalized[oil_min_index:]
+        oil_docs = np.dot(oil_docs, query_vec)
+        oil_docs = np.argsort(-oil_docs)[:6] #sort descending, then get first 5
+        # oil_matches = data.iloc[oil_docs].to_json(orient='records')
+        oil_docs = [data[i] for i in oil_docs]
+        oil_matches = json.dumps(oil_docs)
+
+
+        # oil_docs = tdidf_matrix[oil_min_index:]
+        # oil_docs = cosine_similarity(oil_docs, query_vec).flatten() 
+        # oil_docs = np.argsort(oil_docs)[:-6:-1] #top 5 in descending order: -1 to -5 inclusive
+        # oil_docs += oil_min_index
+        # oil_matches = data.iloc[oil_docs].to_json(orient='records')
     
 
     #return should be dict or list of dicts;
