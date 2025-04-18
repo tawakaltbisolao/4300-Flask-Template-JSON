@@ -10,7 +10,10 @@
     justify-content: start;
     align-items: center;
     flex-direction: column;
+    background-color: #e9e1de;
 }
+
+
 
 #google-c{
     color:#4285F4;
@@ -37,19 +40,19 @@
 }
 
 .google-yellow{
-    color:	#F4B400;
+    color:	#413334;
 }
 
 .google-blue{
-    color:	#4285F4;
+    color:	#413334;
 }
 
 .google-green{
-    color:	#0F9D58;
+    color:	#413334;
 }
 
 .google-red{
-    color:#DB4437;
+    color:#413334;
 }
 
 .google-colors{
