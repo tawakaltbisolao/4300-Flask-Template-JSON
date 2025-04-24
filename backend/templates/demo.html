@@ -1,9 +1,11 @@
 <!doctype html>
 <title>{% block title %}HairCare{% endblock %} - Flaskr</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<!-- <link rel="stylesheet" href="/static/style.css"> -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Kanit&family=Montserrat&family=Open+Sans:wght@500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 <body class="">
     <div class="full-body-container">
         <div class="top-text"> <!--vertically stacked-->
@@ -26,9 +28,9 @@
                 <input placeholder="Color (e.g. Dark Brown)" id="hair-color">
                 <label>, </label>
                 <input placeholder="Type (e.g. Oily,Fine,Thin)" id="hair-type">
-                <label>hair</label>
+                <div class="hide">Type in any additional hair characteristics. E.g oily, thick, damaged</div>
+                <label>hair.</label>
                 <!-- <label> hair which suffers from </label> -->
-                <label>.</label>
                 <!-- <label>I have </label>
                 <select name="hair-color" id="hair-color">
                     <option value="black">Black</option>
@@ -107,6 +109,10 @@
             <div class="search-button">
                 <button type="button" onclick="filterText()">HairCare Search!</button>
             </div>
+            <div class = "my_img">
+                <img src="{{ url_for('static', filename='images/haircare_photo.png') }}" alt="HairCare">
+            </div>
+            
         </div>
         <div id="answer-box">
 
