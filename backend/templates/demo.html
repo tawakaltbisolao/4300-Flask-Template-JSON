@@ -222,13 +222,13 @@
             // fetch("/episodes?" + new URLSearchParams({ title: document.getElementById("filter-text-val").value }).toString())
             // .then((response) => response.json())
             // .then((data) => data.forEach(row => {
-            let hair_color = document.getElementById("hair-color").value
+            // let hair_color = document.getElementById("hair-color").value
             let hair_type = document.getElementById("hair-type").value
             let yes_poo = (document.getElementById("want-poo").value == 'yes')
             let yes_cond = (document.getElementById("want-cond").value == 'yes')
             let yes_oil = (document.getElementById("want-oil").value == 'yes')
             let query = document.getElementById("filter-text-val").value
-            query = hair_color + ' ' + hair_type + ' ' + query
+            query = hair_type + ' ' + query
 
             // console.log(hair_color)
             // console.log(hair_type)
