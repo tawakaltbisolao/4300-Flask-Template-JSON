@@ -118,9 +118,9 @@ def reviews_json_search(wantPoo, wantCond, wantOil, query, bad_idx):
         poo_docs = np.delete(poo_docs, bad_idx_poo, axis=0)
 
         poo_docs = np.dot(poo_docs, query_vec)
-        print(poo_docs[0:5])
+        # print(poo_docs[0:5])
         poo_docs = np.argsort(-poo_docs)[:5] #sort descending, then get first 5
-        print(poo_docs)
+        # print(poo_docs)
         # poo_matches = data.iloc[poo_docs].to_json(orient='records')
         # poo_docs = [data[i] for i in poo_docs]
         poo_docs = [index_to_id[i] for i in poo_docs]
