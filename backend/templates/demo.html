@@ -105,18 +105,27 @@
                 <label>.</label>
             </div>
             <div class="allergy-section">
-                <button class="allergy-toggle" onclick="toggleAllergies()">I have allergies</button>
-                <select id="allergy-dropdown" multiple>
+                <!-- <button class="allergy-toggle" onclick="toggleAllergies()">I have allergies</button> -->
+                <!-- <select id="allergy-dropdown" multiple>
                     <option value="sulfate">Sulfates</option>
                     <option value="paraben">Parabens</option>
-                    <option value="silicone">Silicones</option>
                     <option value="fragrance">Fragrance</option>
-                    <option value="dye">Artificial Dyes</option>
-                    <option value="gluten">Gluten</option>
-                    <option value="nut">Nut Oils</option>
+                    <option value="seed">Seeds</option>
+                    <option value="nut">Nuts</option>
                     <option value="alcohol">Drying Alcohols</option>
-                    <option value="formaldehyde">Formaldehyde</option>
-                </select>
+                </select> -->
+                <p>I am allergic to</p>
+                <input type="checkbox" id="sulfateCheck">
+                <label for="sulfateCheck">Sulfates</label>
+                <input type="checkbox" id="sulfateCheck">
+                <label for="parabenCheck">Parabens</label>
+                <input type="checkbox" id="sulfateCheck">
+                <label for="fragranceCheck">Fragrance</label>
+                <input type="checkbox" id="sulfateCheck">
+                <label for="seedCheck">Seeds</label>
+                <label for="nutCheck">Nuts</label>
+                <input type="checkbox" id="sulfateCheck">
+                <label for="alcoholCheck">Drying Alcohols</label>
             </div>
             <div class="input-box" onclick="sendFocus()">
                 <img src="{{ url_for('static', filename='images/mag.png') }}" />
