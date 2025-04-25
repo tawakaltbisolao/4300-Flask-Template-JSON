@@ -13,8 +13,10 @@ import numpy as np
     # conditioner_df = data.iloc[35501:67892]
     # oil_df = data.iloc[67892:]
 
-cond_min_index = 35501
-oil_min_index = 67892
+# cond_min_index = 35501
+# oil_min_index = 67892
+cond_min_index = 298
+oil_min_index = 540
 
 # ROOT_PATH for linking with all your files. 
 # Feel free to use a config.py or settings.py with a global export variable
@@ -24,23 +26,39 @@ os.environ['ROOT_PATH'] = os.path.abspath(os.path.join("..",os.curdir))
 current_directory = os.path.dirname(os.path.abspath(__file__))
 
 # Specify the path to the JSON file relative to the current script
-json_file_path = os.path.join(current_directory, 'init.json')
+# json_file_path = os.path.join(current_directory, 'init.json')
+
+json_file_path = os.path.join(current_directory, 'dataset', 'ulta_reviews.json')
+vocab_file_path = os.path.join(current_directory, 'dataset', 'ulta_vocabulary.json')
+index_to_id_file_path = os.path.join(current_directory, 'dataset', 'ulta_product_ids.json')
+products_file_path = os.path.join(current_directory, 'dataset', 'products_ulta.json')
+
 
 # Assuming your JSON data is stored in a file named 'init.json'
 with open(json_file_path, 'r') as file:
-    data = json.load(file) #list of dictionaries
+    data = json.load(file) #list of strings, all preprocessing done except embedding
+    
+    #list of dictionaries
 #     # episodes_df = pd.DataFrame(data['episodes'])
 #     # reviews_df = pd.DataFrame(data['reviews'])
 
-data = [review['profile'] + ' ' + review['content'] for review in data]
-vec = TfidfVectorizer(max_df=0.8, min_df=10, ngram_range=(1,3))
+# data = [review['profile'] + ' ' + review['content'] for review in data]
+with open(vocab_file_path, 'r') as f:
+    vocab = json.load(f) # ngram to index dictionary
+# vec = TfidfVectorizer(max_df=0.8, min_df=10, ngram_range=(1,3))
+vec = TfidfVectorizer(vocabulary=vocab)
+vocab = None
 vec.fit(data)
-data = None
-with open(json_file_path, 'r') as file:
-    data = json.load(file) #list of dictionaries
-with open('svd.npy', 'rb') as f:
+# data = None
+# with open(json_file_path, 'r') as file:
+#     data = json.load(file) #list of dictionaries
+# with open('svd.npy', 'rb') as f:
+with open('svd_NEWDATA_U.npy', 'rb') as f:
     docs_compressed_normalized = np.load(f)
+with open('svd_NEWDATA_V001.npy', 'rb') as f:
     words_compressed_normalized = np.load(f)
+with open('svd_NEWDATA_V002.npy', 'rb') as f:
+    words_compressed_normalized = np.vstack((words_compressed_normalized,np.load(f)))
 
 
 #each datapoint has "product_name", "star", "content", and "profile" (might be blank)
@@ -82,6 +100,11 @@ def reviews_json_search(wantPoo, wantCond, wantOil, query):
     # print(type(wantCond))
     # print(type(wantOil))
     # query_vec = vec.transform([query]) #TOARRAY
+    with open(index_to_id_file_path, 'r') as f:
+        index_to_id = json.load(f)
+    with open(products_file_path, 'r') as f:
+        products_info = json.load(f)
+
     query_vec = vec.transform([query]).toarray() 
     query_vec = normalize(np.dot(query_vec, words_compressed_normalized)).squeeze()
     poo_matches = '[]'
@@ -90,9 +113,11 @@ def reviews_json_search(wantPoo, wantCond, wantOil, query):
     if wantPoo:
         poo_docs = docs_compressed_normalized[:cond_min_index]
         poo_docs = np.dot(poo_docs, query_vec)
-        poo_docs = np.argsort(-poo_docs)[:6] #sort descending, then get first 5
+        poo_docs = np.argsort(-poo_docs)[:5] #sort descending, then get first 5
         # poo_matches = data.iloc[poo_docs].to_json(orient='records')
-        poo_docs = [data[i] for i in poo_docs]
+        # poo_docs = [data[i] for i in poo_docs]
+        poo_docs = [index_to_id[i] for i in poo_docs]
+        poo_docs = [products_info['shampoo'][id] for id in poo_docs]
         poo_matches = json.dumps(poo_docs)
 
 
@@ -102,13 +127,14 @@ def reviews_json_search(wantPoo, wantCond, wantOil, query):
         # # poo_docs = np.argmax(poo_docs) #now just a single index
         # poo_docs = np.argsort(poo_docs)[:-6:-1] #top 5 in descending order: -1 to -5 inclusive
         # poo_matches = data.iloc[poo_docs].to_json(orient='records')
-    #TODO: conditioner and oil
+
     if wantCond:
         cond_docs = docs_compressed_normalized[cond_min_index:oil_min_index]
         cond_docs = np.dot(cond_docs, query_vec)
-        cond_docs = np.argsort(-cond_docs)[:6] #sort descending, then get first 5
+        cond_docs = np.argsort(-cond_docs)[:5] #sort descending, then get first 5
         # cond_matches = data.iloc[cond_docs].to_json(orient='records')
-        cond_docs = [data[i + cond_min_index] for i in cond_docs]
+        cond_docs = [index_to_id[i + cond_min_index] for i in cond_docs]
+        cond_docs = [products_info['conditioner'][id] for id in cond_docs]
         cond_matches = json.dumps(cond_docs)
 
 
@@ -120,9 +146,10 @@ def reviews_json_search(wantPoo, wantCond, wantOil, query):
     if wantOil:
         oil_docs = docs_compressed_normalized[oil_min_index:]
         oil_docs = np.dot(oil_docs, query_vec)
-        oil_docs = np.argsort(-oil_docs)[:6] #sort descending, then get first 5
+        oil_docs = np.argsort(-oil_docs)[:5] #sort descending, then get first 5
         # oil_matches = data.iloc[oil_docs].to_json(orient='records')
-        oil_docs = [data[i + oil_min_index] for i in oil_docs]
+        oil_docs = [index_to_id[i + oil_min_index] for i in oil_docs]
+        oil_docs = [products_info['oil'][id] for id in oil_docs]
         oil_matches = json.dumps(oil_docs)
 
 
@@ -135,6 +162,11 @@ def reviews_json_search(wantPoo, wantCond, wantOil, query):
 
     #return should be dict or list of dicts;
     #JS will interpret at actual JSON
+    print('shampoo matches', poo_matches)
+    print()
+    print('conditioner matches', cond_matches)
+    print()
+    print('oil matches', oil_matches)
     return {'shampoos': poo_matches, 'conditioners': cond_matches, 'oils': oil_matches}
 
 

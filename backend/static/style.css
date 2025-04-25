@@ -201,14 +201,22 @@ button{
     background-color: #d3c9c5;
 }
 
+.brand-name{
+    font-family: 'Kanit', sans-serif;
+    text-decoration: underline;
+    font-size: 16;
+}
+
 .product-name{
     font-family: 'Kanit', sans-serif;
+    font-size: 32px;
+    margin-top: 20px;
 }
 
 .product-type{
     font-family: 'Kanit', sans-serif;
+    font-size: 48px;
 }
-
 .product-review{
     font-family: 'Montserrat', sans-serif;
 }
