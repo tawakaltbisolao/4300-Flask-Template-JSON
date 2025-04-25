@@ -116,6 +116,20 @@
             </div> -->
             
         </div>
+        <div class="allergy-section">
+            <button class="allergy-toggle" onclick="toggleAllergies()">I have allergies</button>
+            <select id="allergy-dropdown" multiple>
+                <option value="sulfate">Sulfates</option>
+                <option value="paraben">Parabens</option>
+                <option value="silicone">Silicones</option>
+                <option value="fragrance">Fragrance</option>
+                <option value="dye">Artificial Dyes</option>
+                <option value="gluten">Gluten</option>
+                <option value="nut">Nut Oils</option>
+                <option value="alcohol">Drying Alcohols</option>
+                <option value="formaldehyde">Formaldehyde</option>
+            </select>
+        </div>
         <div id="answer-box">
 
         </div>
@@ -187,6 +201,19 @@
 
         function sendFocus(){
             document.getElementById('filter-text-val').focus()
+        }
+
+        function toggleAllergies() {
+            const toggle = document.querySelector('.allergy-toggle');
+            const dropdown = document.getElementById('allergy-dropdown');
+            
+            if (dropdown.style.display === 'block') {
+                dropdown.style.display = 'none';
+                toggle.classList.remove('active');
+            } else {
+                dropdown.style.display = 'block';
+                toggle.classList.add('active');
+            }
         }
 
         function filterText(){

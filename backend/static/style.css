@@ -168,6 +168,39 @@ button{
     
 }
 
+.allergy-section {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.allergy-toggle {
+    background-color: #e9e1de;
+    color: black;
+    border: 0.5rem outset #413334;
+    border-radius: 10px;
+    padding: 5px 10px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.allergy-toggle.active {
+    background-color: #413334;
+    color: white;
+}
+
+#allergy-dropdown {
+    display: none;
+    border-radius: 10px;
+    border-color: transparent;
+    padding: 8px;
+    width: 200px;
+}
+
+.allergy-toggle:hover {
+    background-color: #d3c9c5;
+}
+
 .product-name{
     font-family: 'Kanit', sans-serif;
 }
