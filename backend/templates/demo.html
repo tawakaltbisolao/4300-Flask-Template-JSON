@@ -117,14 +117,15 @@
                 <p>I am allergic to</p>
                 <input type="checkbox" id="sulfateCheck">
                 <label for="sulfateCheck">Sulfates</label>
-                <input type="checkbox" id="sulfateCheck">
+                <input type="checkbox" id="parabenCheck">
                 <label for="parabenCheck">Parabens</label>
-                <input type="checkbox" id="sulfateCheck">
+                <input type="checkbox" id="fragranceCheck">
                 <label for="fragranceCheck">Fragrance</label>
-                <input type="checkbox" id="sulfateCheck">
+                <input type="checkbox" id="seedCheck">
                 <label for="seedCheck">Seeds</label>
+                <input type="checkbox" id="nutCheck">
                 <label for="nutCheck">Nuts</label>
-                <input type="checkbox" id="sulfateCheck">
+                <input type="checkbox" id="alcoholCheck">
                 <label for="alcoholCheck">Drying Alcohols</label>
             </div>
             <div class="input-box" onclick="sendFocus()">
@@ -277,6 +278,13 @@
             let query = document.getElementById("filter-text-val").value
             query = hair_type + ' ' + query
 
+            let no_sulfate = document.getElementById('sulfateCheck').checked
+            let no_paraben = document.getElementById('parabenCheck').checked
+            let no_fragrance = document.getElementById('fragranceCheck').checked
+            let no_seed = document.getElementById('seedCheck').checked
+            let no_nut = document.getElementById('nutCheck').checked
+            let no_alcohol = document.getElementById('alcoholCheck').checked
+
             // console.log(hair_color)
             // console.log(hair_type)
             // console.log(yes_poo)
@@ -284,7 +292,11 @@
             // console.log(query)
 
             // console.log(document.getElementById("filter-text-val").value)
-            fetch("/reviews?" + new URLSearchParams({ query: query, wantPoo: yes_poo, wantCond: yes_cond, wantOil: yes_oil }).toString())
+            fetch("/reviews?" + new URLSearchParams({ 
+                query: query, wantPoo: yes_poo, wantCond: yes_cond, wantOil: yes_oil, 
+                no_sulfate:no_sulfate, no_paraben:no_paraben, no_fragrance:no_fragrance, 
+                no_seed:no_seed, no_nut:no_nut, no_alcohol:no_alcohol
+            }).toString())
             .then((response) => response.json())
             .then((data) => {
                 // console.log(data.shampoos)
@@ -297,7 +309,7 @@
                 console.log(shampoos.length, conditioners.length, oils.length)
                 if(shampoos.length > 0) {
                     let tempTitle = document.createElement("div")
-                    tempTitle.innerHTML = `<h2 class='product-type'>Shampoos</h2>`
+                    tempTitle.innerHTML = `<h1 class='product-type'>Shampoos</h1>`
                     document.getElementById("answer-box").appendChild(tempTitle)
                     // console.log("shampoos")
                     // let tempTitle = document.createElement("label")
