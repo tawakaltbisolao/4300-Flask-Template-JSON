@@ -204,18 +204,19 @@ button{
 .brand-name{
     font-family: 'Kanit', sans-serif;
     text-decoration: underline;
-    font-size: 16;
+    font-size: 16px;
+    margin-top: 20px;
 }
 
 .product-name{
     font-family: 'Kanit', sans-serif;
     font-size: 32px;
-    margin-top: 20px;
 }
 
 .product-type{
     font-family: 'Kanit', sans-serif;
     font-size: 48px;
+    margin-bottom: 0px;
 }
 .product-review{
     font-family: 'Montserrat', sans-serif;
@@ -225,6 +226,14 @@ button{
 }
 .star-rating{
     font-family: 'Montserrat', sans-serif;
+}
+.ingredients-list{
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+}
+.ingredients-header{
+    font-family: 'Montserrat', sans-serif;
+    font-size: 22px;
 }
 .hide {
     display: none;

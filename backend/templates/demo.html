@@ -176,8 +176,10 @@
             }
             output += `</div>
                 <div class='price'>\$${price}</div>
-                <img class='product-img' src=${img_URL}></img>
-                <a href=${product_URL}>Link to Purchase</a>
+                <div><img class='product-img' src=${img_URL}></img></div>
+                <div><a href=${product_URL}>Link to Purchase</a></div>
+                <div class='ingredients-header'>Ingredients</div>
+                <div class='ingredients-list'>${ingredients}</div>
             </div>`
             return output
         }

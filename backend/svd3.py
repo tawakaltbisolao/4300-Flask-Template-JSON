@@ -27,11 +27,19 @@ words_compressed = words_compressed.transpose()
 
 docs_compressed = normalize(docs_compressed, axis=1)
 words_compressed = normalize(words_compressed, axis=1)
-# print(words_compressed.shape)
+# # print(words_compressed.shape)
 
-with open('svd_NEWDATA_U.npy', 'wb') as f:
-    np.save(f, docs_compressed)
-with open('svd_NEWDATA_V001.npy', 'wb') as f:
-    np.save(f, words_compressed[:200_000])
-with open('svd_NEWDATA_V002.npy', 'wb') as f:
-    np.save(f, words_compressed[200_000:])
+index_to_ngram = {i:t for t,i in vec.vocabulary_.items()}
+for i in range(40):
+    print("Top words in dimension", i)
+    dimension_col = words_compressed[:,i].squeeze()
+    asort = np.argsort(-dimension_col)
+    print([index_to_ngram[i] for i in asort[:20]])
+    print()
+
+# with open('svd_NEWDATA_U.npy', 'wb') as f:
+#     np.save(f, docs_compressed)
+# with open('svd_NEWDATA_V001.npy', 'wb') as f:
+#     np.save(f, words_compressed[:200_000])
+# with open('svd_NEWDATA_V002.npy', 'wb') as f:
+#     np.save(f, words_compressed[200_000:])
