@@ -10,7 +10,7 @@
     justify-content: start;
     align-items: center;
     flex-direction: column;
-    background-color: #e9e1de;
+    /* background-color: #e9e1de; */
 }
 
 
@@ -114,8 +114,10 @@ body{
     display: flex;
     align-items: center;
     margin-top: 10px;
+    margin-bottom: 10px;
     padding:12px;
     width: 600px;
+    background-color: #fff;
 }
 
 .input-box img{
@@ -151,6 +153,7 @@ body{
 
 #hair-type{
     width: 500px;
+    margin-bottom: 10px;
 }
 
 input{
@@ -161,6 +164,7 @@ input{
 select{
     border-radius: 10px;
     border-color: transparent;
+    background-color: #fff;
 }
 button{
     border-radius: 10px;

@@ -104,6 +104,20 @@
                 </select>
                 <label>.</label>
             </div>
+            <div class="allergy-section">
+                <button class="allergy-toggle" onclick="toggleAllergies()">I have allergies</button>
+                <select id="allergy-dropdown" multiple>
+                    <option value="sulfate">Sulfates</option>
+                    <option value="paraben">Parabens</option>
+                    <option value="silicone">Silicones</option>
+                    <option value="fragrance">Fragrance</option>
+                    <option value="dye">Artificial Dyes</option>
+                    <option value="gluten">Gluten</option>
+                    <option value="nut">Nut Oils</option>
+                    <option value="alcohol">Drying Alcohols</option>
+                    <option value="formaldehyde">Formaldehyde</option>
+                </select>
+            </div>
             <div class="input-box" onclick="sendFocus()">
                 <img src="{{ url_for('static', filename='images/mag.png') }}" />
                 <input placeholder="I want a product that will..." id="filter-text-val">
@@ -115,20 +129,6 @@
                 <img src="{{ url_for('static', filename='images/haircare_photo.png') }}" alt="HairCare">
             </div> -->
             
-        </div>
-        <div class="allergy-section">
-            <button class="allergy-toggle" onclick="toggleAllergies()">I have allergies</button>
-            <select id="allergy-dropdown" multiple>
-                <option value="sulfate">Sulfates</option>
-                <option value="paraben">Parabens</option>
-                <option value="silicone">Silicones</option>
-                <option value="fragrance">Fragrance</option>
-                <option value="dye">Artificial Dyes</option>
-                <option value="gluten">Gluten</option>
-                <option value="nut">Nut Oils</option>
-                <option value="alcohol">Drying Alcohols</option>
-                <option value="formaldehyde">Formaldehyde</option>
-            </select>
         </div>
         <div id="answer-box">
 

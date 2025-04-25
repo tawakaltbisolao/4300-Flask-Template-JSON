@@ -37,9 +37,11 @@ for i in range(40):
     print([index_to_ngram[i] for i in asort[:20]])
     print()
 
-# with open('svd_NEWDATA_U.npy', 'wb') as f:
-#     np.save(f, docs_compressed)
-# with open('svd_NEWDATA_V001.npy', 'wb') as f:
-#     np.save(f, words_compressed[:200_000])
-# with open('svd_NEWDATA_V002.npy', 'wb') as f:
-#     np.save(f, words_compressed[200_000:])
+with open('svd_NEWDATA_U.npy', 'wb') as f:
+    np.save(f, docs_compressed)
+with open('svd_NEWDATA_S.npy', 'wb') as f:
+    np.save(f, s)
+with open('svd_NEWDATA_V001.npy', 'wb') as f:
+    np.save(f, words_compressed[:200_000])
+with open('svd_NEWDATA_V002.npy', 'wb') as f:
+    np.save(f, words_compressed[200_000:])
